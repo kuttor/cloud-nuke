@@ -12,7 +12,6 @@ import boto3
 
 
 def main():
-
     try:
         # parse arguments, use file docstring as a parameter definition
         arguments = docopt.docopt(__doc__)
@@ -31,16 +30,16 @@ def main():
     else:
         print "do that"
 
+
 def delete_stack(stack):
     client = boto3.client('cloudformation')
-   response = client.delete_stack(
-        StackName=stack,
-    )
 
-    return response
+
+response = client.delete_stack(
+    StackName=stack,
+)
+
+return response
 
 if __name__ == "__main__":
     main()
-
-
-
