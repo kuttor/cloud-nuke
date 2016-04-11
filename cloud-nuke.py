@@ -1,45 +1,1 @@
-#!/usr/bin/env python
-"""Usage: cloud-nuke --file list_of_cf_stacks
-
-Arguments:
-    --file  <input file>
-
-Options:
-    --dryrun executes kill request as a test, doesn't actually execute
-"""
-from docopt import docopt
-import boto3
-
-
-def main():
-    try:
-        # parse arguments, use file docstring as a parameter definition
-        arguments = docopt.docopt(__doc__)
-
-        # file is a mandatory
-        filename = int(arguments['--file'])
-
-        # dryrun is optional
-        dryrun = int(arguments['--dryrun'])
-
-    except docopt.DocoptExit as e:
-        print e.message
-
-    if dryrun == True:
-        print "do this"
-    else:
-        print "do that"
-
-
-def delete_stack(stack):
-    client = boto3.client('cloudformation')
-
-
-response = client.delete_stack(
-    StackName=stack,
-)
-
-return response
-
-if __name__ == "__main__":
-    main()
+#!/usr/bin/env pythonfrom docopt import docoptimport boto3# converts a file list into an arraydef profiler(filename):    with open(filename, "r") as f:        lines = f.read().splitlines()    return lines# get outputs from ec2 instancesdef output(stack):    client = boto3.client('cloudformation')    response = client.describe_stacks(StackName=stack)    outputs = response['Stacks'][0]['Outputs']    params = {}    for i in outputs:        params[i['OutputKey']] = i['OutputValue']    print outputs    return params# basic boto3 method to terminate stacksdef delete_stack(stack):    client = boto3.client('cloudformation')    response = client.delete_stack(StackName=stack)    return response# mass terminates cf stacks within a scopedef nuke():    hit_list = profiler(filename)    for target in hit_list:        print ""if __name__ == "__main__":    output('wf-prod-415487-81BE8AEB')
